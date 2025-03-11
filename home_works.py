@@ -15,8 +15,7 @@ while True:
     if x in numbers:
         print(f"Сан {x} табылды! ")
         break
-    else:
-        print("Сан табылган жок")
+
 
 # task 4
 numbers = [7, 9, 13, 18, 21]

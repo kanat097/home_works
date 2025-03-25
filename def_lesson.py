@@ -26,9 +26,18 @@ from pkg_resources.extern import names
 
 
 
-def create_profile(*hobbies, **info):
-    print(f'Hobbi: {hobbies}')
-    for key, value in info.items():
-        print(f"{key}: {value}")
-create_profile('чтение', 'tennis',  name="Ivan", age=30, city='bishkek')
+# def create_profile(*hobbies, **info):
+#     print(f'Hobbi: {hobbies}')
+#     for key, value in info.items():
+#         print(f"{key}: {value}")
+# create_profile('чтение', 'tennis',  name="Ivan", age=30, city='bishkek')
 
+
+# homework 22.03.25
+with open('data.txt', 'r') as file:
+    lines = file.readlines()
+
+with open('filtered_data.txt', 'w') as filtered_data:
+    for line in lines:
+        if line.strip():
+            filtered_data.write(line)

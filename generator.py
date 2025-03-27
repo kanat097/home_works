@@ -24,20 +24,26 @@
 # print(short_words)
 from operator import length_hint
 
-numbers = tuple(x for x in range(100))
-print(numbers)
+# numbers = tuple(x for x in range(100))
+# print(numbers)
+#
+# numbers = [x for x in range(10) if x % 2 != 0]
+# print(numbers)
+#
+#
+# def word_lengths(words):
+#     for word in words:
+#         yield len(word)
+# words = ['cat', 'elephant', 'dog', 'giraffe']
+# lengths = list(word_lengths(words))
+# print(lengths)
+#
+# words = ['cat', 'elephant', 'dog', 'giraffe', 'lion']
+# even_words = [word for word in words if len(word) % 2 == 0]
+# print(even_words)
 
-numbers = [x for x in range(10) if x % 2 != 0]
-print(numbers)
 
-
-def word_lengths(words):
-    for word in words:
-        yield len(word)
-words = ['cat', 'elephant', 'dog', 'giraffe']
-lengths = list(word_lengths(words))
-print(lengths)
-
-words = ['cat', 'elephant', 'dog', 'giraffe', 'lion']
-even_words = [word for word in words if len(word) % 2 == 0]
-print(even_words)
+# homework
+words = ['apple', 'banana', 'avocado', 'cherry', 'apricot',]
+filtered_words = [word for word in words if word.startswith('a')]
+print(filtered_words)

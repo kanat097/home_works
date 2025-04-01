@@ -1,126 +1,81 @@
-# import time
-#
-# TARIFF = 100  # 100 сом за час
-# tickets = {}  # Хранение активных талонов
-#
-#
-# def issue_ticket():
-#     car_number = input("Введите номер машины: ").strip()
-#     if not car_number:
-#         print("Ошибка: номер машины не может быть пустым.")
-#         return
-#
-#     ticket_id = str(len(tickets) + 1)  # Упрощённый ID талона
-#     tickets[ticket_id] = time.time()  # Запоминаем время въезда
-#
-#     print(f"Талон №{ticket_id} выдан!")
-#
-#
-# def return_ticket():
-#     ticket_id = input("Введите номер талона: ").strip()
-#
-#     if ticket_id not in tickets:
-#         print("Ошибка: талон не найден.")
-#         return
-#
-#     entry_time = tickets.pop(ticket_id)
-#     hours = max(1, int((time.time() - entry_time) // 3600))  # Минимум 1 час
-#     print(f"К оплате: {hours * TARIFF} сом.")
-#
-#
-# def main():
-#     while True:
-#         choice = input("\n1 - Выдать талон\n2 - Сдать талон\n3 - Выход\nВыбор: ")
-#         if choice == "1":
-#             issue_ticket()
-#         elif choice == "2":
-#             return_ticket()
-#         elif choice == "3":
-#             break
-#         else:
-#             print("Ошибка: неверный выбор.")
-#
-#
-# if __name__ == "__main__":
-#     main()
+import random
+from datetime import datetime
 
-import time
-
-# Тариф за час
+# Тарифы (например, 100 сом в час)
 TARIFF_PER_HOUR = 100
 
-# Хранилище талонов (просто словарь)
-parking_data = {}
+# Словарь для хранения информации о талонах
+tickets = {}
 
-# Генерация номера талона (просто текущее время в секундах)
-def generate_ticket_number():
-    return str(int(time.time()))
 
-# Выдача талона
 def issue_ticket():
-    car_number = input("Введите номер машины: ").strip().upper()
-
-    # Проверяем, что номер машины не пустой
-    if not car_number:
-        print("Ошибка: Введите правильный номер машины.")
+    # Ввод номера машины
+    car_number = input("Введите номер машины: ")
+    if not car_number.strip():
+        print("Ошибка: Номер машины не может быть пустым!")
         return
 
-    ticket_number = generate_ticket_number()
-    entry_time = time.time()  # Запоминаем время въезда в секундах
+    # Генерация уникального номера талона случайным образом
+    ticket_number = str(random.randint(100000, 999999))
+    current_time = datetime.now()
 
-    # Сохраняем данные
-    parking_data[ticket_number] = {"car_number": car_number, "entry_time": entry_time, "paid": False}
+    # Сохраняем информацию о талоне
+    tickets[ticket_number] = {'car_number': car_number, 'entry_time': current_time}
 
-    print("\nТалон выдан:")
-    print("Номер талона:", ticket_number)
-    print("Номер машины:", car_number)
-    print()
+    # Выводим информацию о выданном талоне
+    print(f"Талон выдан:")
+    print(f"Номер талона: {ticket_number}")
+    print(f"Номер машины: {car_number}")
+    print(f"Время выдачи: {current_time.strftime('%Y-%m-%d %H:%M:%S')}")
 
-# Сдача талона и расчет стоимости
-def return_ticket():
-    ticket_number = input("Введите номер талона: ").strip()
 
-    if ticket_number not in parking_data:
-        print("Ошибка: Талон не найден.")
+def calculate_parking_fee(ticket_number):
+    # Проверка, существует ли талон
+    if ticket_number not in tickets:
+        print("Ошибка: Талон не найден!")
         return
 
-    if parking_data[ticket_number]["paid"]:
-        print("Ошибка: Талон уже оплачен.")
-        return
+    # Получаем данные по талону
+    ticket = tickets[ticket_number]
+    entry_time = ticket['entry_time']
+    car_number = ticket['car_number']
 
-    entry_time = parking_data[ticket_number]["entry_time"]
-    exit_time = time.time()  # Текущее время
-    duration_hours = int((exit_time - entry_time) // 3600) + 1  # Округляем вверх
-    total_cost = duration_hours * TARIFF_PER_HOUR
+    # Ввод времени выезда
+    exit_time = datetime.now()
 
-    print("\nСчет к оплате:")
-    print("Номер талона:", ticket_number)
-    print("Номер машины:", parking_data[ticket_number]["car_number"])
-    print("Продолжительность парковки:", duration_hours, "час(ов)")
-    print("Стоимость парковки:", total_cost, "сом")
-    print()
+    # Расчет продолжительности парковки
+    parking_duration = exit_time - entry_time
+    hours_parked = parking_duration.total_seconds() / 3600  # переводим в часы
 
-    # Отмечаем талон как оплаченный
-    parking_data[ticket_number]["paid"] = True
+    # Расчет стоимости парковки
+    fee = round(hours_parked * TARIFF_PER_HOUR)
 
-# Главное меню
+    # Вывод счета
+    print(f"\nСчет к оплате:")
+    print(f"Номер талона: {ticket_number}")
+    print(f"Номер машины: {car_number}")
+    print(f"Время въезда: {entry_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Время выезда: {exit_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Продолжительность парковки: {int(hours_parked)} часов")
+    print(f"Стоимость парковки: {fee} сом")
+
+
 def main():
     while True:
+        # Меню действий
         print("\nВыберите действие:")
         print("1. Выдача талона")
         print("2. Сдача талона")
-        print("3. Выход")
+        choice = input("Ваш выбор: ")
 
-        choice = input("Ваш выбор: ").strip()
-        if choice == "1":
+        if choice == '1':
             issue_ticket()
-        elif choice == "2":
-            return_ticket()
-        elif choice == "3":
-            print("Выход из программы.")
-            break
+        elif choice == '2':
+            ticket_number = input("Введите номер талона: ")
+            calculate_parking_fee(ticket_number)
         else:
-            print("Ошибка: Неверный ввод, попробуйте снова.")
+            print("Некорректный выбор. Попробуйте снова.")
 
-# Запуск программы
-main()
+
+if __name__ == "__main__":
+    main()
